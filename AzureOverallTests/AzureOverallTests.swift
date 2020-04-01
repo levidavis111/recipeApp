@@ -30,5 +30,20 @@ class AzureOverallTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
+    
+    func testRecipeFromJSON() {
+        let recipeService = RecipeClientService()
+        let testBundle = Bundle(for: type(of: self))
+        guard let pathToData = testBundle.path(forResource: "RecipeJSON", ofType: "json") else {XCTFail(); return}
+        let url = URL(fileURLWithPath: pathToData)
+        do {
+            let data = try Data(contentsOf: url)
+            let recipes = recipeService.getRecipes(from: data)
+            guard recipes.count > 0 else {XCTFail(); print("there are \(recipes.count))"); return}
+        } catch {
+            XCTFail()
+        }
+        XCTAssert(true)
+    }
 
 }

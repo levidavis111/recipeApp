@@ -16,6 +16,10 @@
 		FC44C47C2434DEE60096FEC7 /* AzureOverallTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C47B2434DEE60096FEC7 /* AzureOverallTests.swift */; };
 		FC44C4892434E0E40096FEC7 /* Secret.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4882434E0E40096FEC7 /* Secret.swift */; };
 		FC44C48C2434E3D70096FEC7 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C48B2434E3D70096FEC7 /* Recipe.swift */; };
+		FC44C48F2434E64D0096FEC7 /* RecipeClientService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C48E2434E64D0096FEC7 /* RecipeClientService.swift */; };
+		FC44C4912434E8330096FEC7 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4902434E8330096FEC7 /* AppError.swift */; };
+		FC44C4932434F1DF0096FEC7 /* RecipeJSON.json in Resources */ = {isa = PBXBuildFile; fileRef = FC44C4922434F1DF0096FEC7 /* RecipeJSON.json */; };
+		FC44C4962434F2F00096FEC7 /* AzureBrowseScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4952434F2F00096FEC7 /* AzureBrowseScreenViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +46,10 @@
 		FC44C47D2434DEE60096FEC7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FC44C4882434E0E40096FEC7 /* Secret.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secret.swift; sourceTree = "<group>"; };
 		FC44C48B2434E3D70096FEC7 /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
+		FC44C48E2434E64D0096FEC7 /* RecipeClientService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeClientService.swift; sourceTree = "<group>"; };
+		FC44C4902434E8330096FEC7 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		FC44C4922434F1DF0096FEC7 /* RecipeJSON.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = RecipeJSON.json; sourceTree = "<group>"; };
+		FC44C4952434F2F00096FEC7 /* AzureBrowseScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzureBrowseScreenViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,7 +91,9 @@
 		FC44C4632434DEDE0096FEC7 /* AzureOverall */ = {
 			isa = PBXGroup;
 			children = (
+				FC44C4942434F2DB0096FEC7 /* View Controllers */,
 				FC44C48A2434E1D10096FEC7 /* Models */,
+				FC44C48D2434E61E0096FEC7 /* Networking */,
 				FC44C4872434E0D50096FEC7 /* Secrets */,
 				FC44C4862434DF210096FEC7 /* Supporting Files */,
 				FC44C4682434DEDE0096FEC7 /* ViewController.swift */,
@@ -97,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				FC44C47B2434DEE60096FEC7 /* AzureOverallTests.swift */,
+				FC44C4922434F1DF0096FEC7 /* RecipeJSON.json */,
 				FC44C47D2434DEE60096FEC7 /* Info.plist */,
 			);
 			path = AzureOverallTests;
@@ -127,6 +138,23 @@
 				FC44C48B2434E3D70096FEC7 /* Recipe.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		FC44C48D2434E61E0096FEC7 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				FC44C48E2434E64D0096FEC7 /* RecipeClientService.swift */,
+				FC44C4902434E8330096FEC7 /* AppError.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		FC44C4942434F2DB0096FEC7 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				FC44C4952434F2F00096FEC7 /* AzureBrowseScreenViewController.swift */,
+			);
+			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -220,6 +248,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC44C4932434F1DF0096FEC7 /* RecipeJSON.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,11 +259,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC44C4962434F2F00096FEC7 /* AzureBrowseScreenViewController.swift in Sources */,
 				FC44C4692434DEDE0096FEC7 /* ViewController.swift in Sources */,
 				FC44C4892434E0E40096FEC7 /* Secret.swift in Sources */,
+				FC44C48F2434E64D0096FEC7 /* RecipeClientService.swift in Sources */,
 				FC44C4652434DEDE0096FEC7 /* AppDelegate.swift in Sources */,
 				FC44C4672434DEDE0096FEC7 /* SceneDelegate.swift in Sources */,
 				FC44C48C2434E3D70096FEC7 /* Recipe.swift in Sources */,
+				FC44C4912434E8330096FEC7 /* AppError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
