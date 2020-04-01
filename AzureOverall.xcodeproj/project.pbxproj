@@ -15,6 +15,7 @@
 		FC44C4712434DEE50096FEC7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC44C46F2434DEE50096FEC7 /* LaunchScreen.storyboard */; };
 		FC44C47C2434DEE60096FEC7 /* AzureOverallTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C47B2434DEE60096FEC7 /* AzureOverallTests.swift */; };
 		FC44C4892434E0E40096FEC7 /* Secret.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4882434E0E40096FEC7 /* Secret.swift */; };
+		FC44C48C2434E3D70096FEC7 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C48B2434E3D70096FEC7 /* Recipe.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,7 @@
 		FC44C47B2434DEE60096FEC7 /* AzureOverallTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzureOverallTests.swift; sourceTree = "<group>"; };
 		FC44C47D2434DEE60096FEC7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FC44C4882434E0E40096FEC7 /* Secret.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secret.swift; sourceTree = "<group>"; };
+		FC44C48B2434E3D70096FEC7 /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 		FC44C4632434DEDE0096FEC7 /* AzureOverall */ = {
 			isa = PBXGroup;
 			children = (
+				FC44C48A2434E1D10096FEC7 /* Models */,
 				FC44C4872434E0D50096FEC7 /* Secrets */,
 				FC44C4862434DF210096FEC7 /* Supporting Files */,
 				FC44C4682434DEDE0096FEC7 /* ViewController.swift */,
@@ -116,6 +119,14 @@
 				FC44C4882434E0E40096FEC7 /* Secret.swift */,
 			);
 			path = Secrets;
+			sourceTree = "<group>";
+		};
+		FC44C48A2434E1D10096FEC7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FC44C48B2434E3D70096FEC7 /* Recipe.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -223,6 +234,7 @@
 				FC44C4892434E0E40096FEC7 /* Secret.swift in Sources */,
 				FC44C4652434DEDE0096FEC7 /* AppDelegate.swift in Sources */,
 				FC44C4672434DEDE0096FEC7 /* SceneDelegate.swift in Sources */,
+				FC44C48C2434E3D70096FEC7 /* Recipe.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
