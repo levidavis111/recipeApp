@@ -14,9 +14,8 @@ class RecipeClientService {
     
     func getRecipeData(searchTerm: String, completion: @escaping (Result<[Recipe], AppError>) -> ()) {
         dataTask?.cancel()
-//        https://api.spoonacular.com/recipes/search?query=cheese&number=2&apiKey=
         if var urlComponents = URLComponents(string: "https://api.spoonacular.com/recipes/search") {
-//            urlComponents.query = "query=\(searchTerm)&number=2"
+
             urlComponents.queryItems = [
                 URLQueryItem(name: "query", value: "\(searchTerm)"),
                 URLQueryItem(name: "number", value: "2"),
@@ -24,7 +23,6 @@ class RecipeClientService {
             ]
   
             guard let url = urlComponents.url else {return}
-            print(url)
             
             dataTask = session.dataTask(with: url) {[weak self] data, response, error in
                 defer {

@@ -14,7 +14,13 @@ class AzureBrowseScreenViewController: UIViewController {
     private let cellSpacing: CGFloat = 10.0
     
     private let recipeClientService = RecipeClientService()
-    private var searchTerm: String = ""
+    private var searchTerm: String = "" {
+        didSet {
+            DispatchQueue.main.async {[weak self] in
+                self?.getRecipes()
+            }
+        }
+    }
     
     private var recipes: [Recipe] = [] {
         didSet {
@@ -27,6 +33,7 @@ class AzureBrowseScreenViewController: UIViewController {
     
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
+        searchBar.showsCancelButton = true
         return searchBar
     }()
     
@@ -34,6 +41,7 @@ class AzureBrowseScreenViewController: UIViewController {
         let layout = UICollectionViewFlowLayout.init()
         layout.scrollDirection = .vertical
         let collectionView = (UICollectionView(frame: .zero, collectionViewLayout: layout))
+        collectionView.register(AzureBrowseCollectionViewCell.self, forCellWithReuseIdentifier: ResuseIdentifier.AzureBrowseCollectionCell.rawValue)
         collectionView.backgroundColor = .white
         return collectionView
         
@@ -50,7 +58,6 @@ class AzureBrowseScreenViewController: UIViewController {
         addSubviews()
         constrainSubviews()
         setDelegates()
-        getRecipes()
         
     }
     
@@ -119,25 +126,63 @@ extension AzureBrowseScreenViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return UICollectionViewCell()
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ResuseIdentifier.AzureBrowseCollectionCell.rawValue, for: indexPath) as? AzureBrowseCollectionViewCell else {return UICollectionViewCell()}
+        
+        let oneRecipe = recipes[indexPath.row]
+        
+        cell.imageView.image = UIImage(systemName: "person")
+        cell.recipeTitle.text = oneRecipe.title
+        cell.recipeInfo.text = "Makes \(oneRecipe.servings) servings in \(oneRecipe.readyInMinutes) minutes!"
+        
+        return cell
     }
-    
     
 }
 
 extension AzureBrowseScreenViewController: UICollectionViewDelegate {}
 
-extension AzureBrowseScreenViewController: UISearchBarDelegate {}
+extension AzureBrowseScreenViewController: UICollectionViewDelegateFlowLayout {
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    let numCells: CGFloat = 1
+    let numSpaces: CGFloat = numCells + 1
+    
+    let screenWidth = UIScreen.main.bounds.width
+    let screenheight = UIScreen.main.bounds.height
+    
+    return CGSize(width: (screenWidth - (cellSpacing * numSpaces)) / numCells, height: screenheight / 2)
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    return UIEdgeInsets(top: cellSpacing, left: cellSpacing, bottom: 0, right: cellSpacing)
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    return cellSpacing
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    return cellSpacing
+  }
+}
+
+extension AzureBrowseScreenViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if let searchEntry = searchBar.text {
+            self.searchTerm = searchEntry
+        } else {
+            self.searchTerm = ""
+        }
+        searchBar.resignFirstResponder()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+}
 
 
 
 extension AzureBrowseScreenViewController: EmptyDataSetSource, EmptyDataSetDelegate {
-//    Show a message if the collection view is empty.
-//    func setupEmptyDataSourceDelegate() {
-//        collectionView.emptyDataSetDelegate = self
-//        collectionView.emptyDataSetSource = self
-//        collectionView.backgroundView = UIView()
-//    }
     
     func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         let titleString = "No Recipes Loaded"
