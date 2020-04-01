@@ -31,7 +31,7 @@ class AzureBrowseCollectionViewCell: UICollectionViewCell {
     lazy var recipeInfo: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.textAlignment = .right
+        label.textAlignment = .left
         label.numberOfLines = 0
         return label
     }()
@@ -40,10 +40,30 @@ class AzureBrowseCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         addSubviews()
         contrainSubviews()
+        roundCellCorners()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func roundCellCorners() {
+        let shadowOffset = CGSize(width: 0, height: 2)
+        
+        contentView.layer.cornerRadius = 20
+        contentView.layer.borderWidth = 1
+        contentView.layer.borderColor = UIColor.clear.cgColor
+        contentView.layer.masksToBounds = true
+        
+        let shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: contentView.layer.cornerRadius).cgPath
+        
+        layer.shadowOffset = shadowOffset
+        layer.shadowRadius = 2
+        layer.shadowOpacity = 0.25
+        layer.masksToBounds = false
+        layer.shadowPath = shadowPath
+        
+        contentView.layoutIfNeeded()
     }
     
     private func addSubviews() {
@@ -60,9 +80,7 @@ class AzureBrowseCollectionViewCell: UICollectionViewCell {
     
     private func constrainImageView() {
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        [imageView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: padding),
-         imageView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: padding),
-         imageView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
+        [imageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor), imageView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: padding),imageView.widthAnchor.constraint(equalToConstant: contentView.safeAreaLayoutGuide.layoutFrame.width / 1.5),
          imageView.heightAnchor.constraint(equalToConstant: contentView.safeAreaLayoutGuide.layoutFrame.height / 2)].forEach {$0.isActive = true}
     }
     

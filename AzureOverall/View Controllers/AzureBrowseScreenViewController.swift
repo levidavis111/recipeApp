@@ -168,6 +168,9 @@ extension AzureBrowseScreenViewController: UICollectionViewDelegateFlowLayout {
 extension AzureBrowseScreenViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let searchEntry = searchBar.text {
+            DispatchQueue.main.async {[weak self] in
+                self?.activityIndicator.startAnimating()
+            }
             self.searchTerm = searchEntry
         } else {
             self.searchTerm = ""
