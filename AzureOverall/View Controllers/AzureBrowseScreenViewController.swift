@@ -66,7 +66,6 @@ class AzureBrowseScreenViewController: UIViewController {
             DispatchQueue.main.async {
                 self?.activityIndicator.startAnimating()
             }
-            
             switch result {
             case .success(let recipes):
                 self?.recipes = recipes
@@ -129,10 +128,26 @@ extension AzureBrowseScreenViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ResuseIdentifier.AzureBrowseCollectionCell.rawValue, for: indexPath) as? AzureBrowseCollectionViewCell else {return UICollectionViewCell()}
         
         let oneRecipe = recipes[indexPath.row]
+        let imageUrl = "https://spoonacular.com/recipeImages/\(oneRecipe.id)-240x150.jpg"
         
         cell.imageView.image = UIImage(systemName: "person")
         cell.recipeTitle.text = oneRecipe.title
         cell.recipeInfo.text = "Makes \(oneRecipe.servings) servings in \(oneRecipe.readyInMinutes) minutes!"
+        
+        ImageManager.manager.getImage(urlStr: imageUrl) {(result) in
+            switch result {
+            case .failure(let error):
+                print(error)
+                DispatchQueue.main.async {
+                    cell.imageView.image = UIImage(named: "noImage")
+                }
+            case .success(let image):
+                DispatchQueue.main.async {
+                    cell.imageView.image = image
+                    
+                }
+            }
+        }
         
         return cell
     }

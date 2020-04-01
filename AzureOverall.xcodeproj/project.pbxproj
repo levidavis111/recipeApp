@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -22,6 +22,7 @@
 		FC44C4962434F2F00096FEC7 /* AzureBrowseScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4952434F2F00096FEC7 /* AzureBrowseScreenViewController.swift */; };
 		FC44C4992434FCD20096FEC7 /* AzureBrowseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4982434FCD20096FEC7 /* AzureBrowseCollectionViewCell.swift */; };
 		FC44C49C2434FD490096FEC7 /* ReuseIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C49B2434FD490096FEC7 /* ReuseIdentifiers.swift */; };
+		FC44C4A02435352B0096FEC7 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C49F2435352B0096FEC7 /* ImageManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		FC44C4952434F2F00096FEC7 /* AzureBrowseScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzureBrowseScreenViewController.swift; sourceTree = "<group>"; };
 		FC44C4982434FCD20096FEC7 /* AzureBrowseCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzureBrowseCollectionViewCell.swift; sourceTree = "<group>"; };
 		FC44C49B2434FD490096FEC7 /* ReuseIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseIdentifiers.swift; sourceTree = "<group>"; };
+		FC44C49F2435352B0096FEC7 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,7 +90,6 @@
 				A3CD90116DEEE3A475878898 /* Pods-AzureOverallTests.debug.xcconfig */,
 				BDF8DB2163684A39A2E10FD7 /* Pods-AzureOverallTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -176,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				FC44C48E2434E64D0096FEC7 /* RecipeClientService.swift */,
+				FC44C49F2435352B0096FEC7 /* ImageManager.swift */,
 				FC44C4902434E8330096FEC7 /* AppError.swift */,
 			);
 			path = Networking;
@@ -375,6 +377,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC44C4962434F2F00096FEC7 /* AzureBrowseScreenViewController.swift in Sources */,
+				FC44C4A02435352B0096FEC7 /* ImageManager.swift in Sources */,
 				FC44C4992434FCD20096FEC7 /* AzureBrowseCollectionViewCell.swift in Sources */,
 				FC44C4892434E0E40096FEC7 /* Secret.swift in Sources */,
 				FC44C48F2434E64D0096FEC7 /* RecipeClientService.swift in Sources */,

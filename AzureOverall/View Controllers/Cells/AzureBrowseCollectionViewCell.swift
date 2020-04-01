@@ -14,7 +14,7 @@ class AzureBrowseCollectionViewCell: UICollectionViewCell {
     
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .clear
         imageView.isUserInteractionEnabled = true
         return imageView
@@ -31,7 +31,7 @@ class AzureBrowseCollectionViewCell: UICollectionViewCell {
     lazy var recipeInfo: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.textAlignment = .left
+        label.textAlignment = .center
         label.numberOfLines = 0
         return label
     }()
