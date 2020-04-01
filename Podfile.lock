@@ -1,0 +1,16 @@
+PODS:
+  - EmptyDataSet-Swift (5.0.0)
+
+DEPENDENCIES:
+  - EmptyDataSet-Swift (~> 5.0.0)
+
+SPEC REPOS:
+  trunk:
+    - EmptyDataSet-Swift
+
+SPEC CHECKSUMS:
+  EmptyDataSet-Swift: eb382c0c87a2d9c678077385a595cec52da38171
+
+PODFILE CHECKSUM: 464f3b0db8590d0001802e9b6714f85038eb17fa
+
+COCOAPODS: 1.8.4
