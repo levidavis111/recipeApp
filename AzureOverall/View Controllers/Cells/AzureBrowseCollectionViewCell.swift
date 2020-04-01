@@ -25,6 +25,7 @@ class AzureBrowseCollectionViewCell: UICollectionViewCell {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.textColor = .black
+        label.font = UIFont(name: "Georgia-Bold", size: 18)
         return label
     }()
     
@@ -33,6 +34,7 @@ class AzureBrowseCollectionViewCell: UICollectionViewCell {
         label.textColor = .black
         label.textAlignment = .center
         label.numberOfLines = 0
+        label.font = UIFont(name: "Georgia", size: 12)
         return label
     }()
     

@@ -154,7 +154,26 @@ extension AzureBrowseScreenViewController: UICollectionViewDataSource {
     
 }
 
-extension AzureBrowseScreenViewController: UICollectionViewDelegate {}
+extension AzureBrowseScreenViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let detailVC = AzureDetailViewController()
+        let oneRecipe = recipes[indexPath.row]
+        detailVC.recipe = oneRecipe
+        DispatchQueue.main.async {[weak self] in
+            self?.activityIndicator.startAnimating()
+        }
+        
+        UIView.transition(from: self.view, to: detailVC.view, duration: 0.8, options: .transitionCrossDissolve) { [weak self](_) in
+           
+            detailVC.recipe = oneRecipe
+            self?.navigationController?.pushViewController(detailVC, animated: true)
+            DispatchQueue.main.async {
+                self?.activityIndicator.stopAnimating()
+            }
+            
+        }
+    }
+}
 
 extension AzureBrowseScreenViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -23,6 +23,7 @@
 		FC44C4992434FCD20096FEC7 /* AzureBrowseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4982434FCD20096FEC7 /* AzureBrowseCollectionViewCell.swift */; };
 		FC44C49C2434FD490096FEC7 /* ReuseIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C49B2434FD490096FEC7 /* ReuseIdentifiers.swift */; };
 		FC44C4A02435352B0096FEC7 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C49F2435352B0096FEC7 /* ImageManager.swift */; };
+		FC44C4A2243538920096FEC7 /* AzureDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4A1243538920096FEC7 /* AzureDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		FC44C4982434FCD20096FEC7 /* AzureBrowseCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzureBrowseCollectionViewCell.swift; sourceTree = "<group>"; };
 		FC44C49B2434FD490096FEC7 /* ReuseIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseIdentifiers.swift; sourceTree = "<group>"; };
 		FC44C49F2435352B0096FEC7 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
+		FC44C4A1243538920096FEC7 /* AzureDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzureDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +190,7 @@
 			children = (
 				FC44C4972434FCA80096FEC7 /* Cells */,
 				FC44C4952434F2F00096FEC7 /* AzureBrowseScreenViewController.swift */,
+				FC44C4A1243538920096FEC7 /* AzureDetailViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -382,6 +385,7 @@
 				FC44C4892434E0E40096FEC7 /* Secret.swift in Sources */,
 				FC44C48F2434E64D0096FEC7 /* RecipeClientService.swift in Sources */,
 				FC44C4652434DEDE0096FEC7 /* AppDelegate.swift in Sources */,
+				FC44C4A2243538920096FEC7 /* AzureDetailViewController.swift in Sources */,
 				FC44C4672434DEDE0096FEC7 /* SceneDelegate.swift in Sources */,
 				FC44C48C2434E3D70096FEC7 /* Recipe.swift in Sources */,
 				FC44C4912434E8330096FEC7 /* AppError.swift in Sources */,

@@ -19,6 +19,7 @@ struct Recipe: Codable {
     let readyInMinutes: Int
     let servings: Int
     let title: String
+    let numberInCart = 0
 }
 //https://api.spoonacular.com/recipes/search?query=cheese&number=2&apiKey=
 
