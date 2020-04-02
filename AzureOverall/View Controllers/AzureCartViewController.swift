@@ -11,17 +11,53 @@ import EmptyDataSet_Swift
 
 class AzureCartViewController: UIViewController {
     
-    var cart: [Recipe] = []
+    var cart: [Recipe] = [] {
+        didSet {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.checkDataSet()
+            }
+        }
+    }
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(AzureCartTableViewCell.self, forCellReuseIdentifier: ResuseIdentifier.AzureCartTableCell.rawValue)
         return tableView
     }()
+    
+    private lazy var emptyTextHeader: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(descriptor: .preferredFontDescriptor(withTextStyle: .headline), size: 25)
+        label.textColor = .lightGray
+        label.textAlignment = .center
+        label.text = "No Recipes in Cart"
+        return label
+    }()
+    
+    private lazy var emptyTextDescrption: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(descriptor: .preferredFontDescriptor(withTextStyle: .subheadline), size: 20)
+        label.textColor = .lightGray
+        label.textAlignment = .center
+        label.text = "Recipes in cart will appear here"
+        return label
+    }()
+    
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.hidesWhenStopped = true
+        return spinner
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         getCartFromFileManager()
+        addSubviews()
+        contrainSubviews()
+        setDelegates()
+        checkDataSet()
         // Do any additional setup after loading the view.
     }
 
@@ -29,6 +65,7 @@ class AzureCartViewController: UIViewController {
     private func getCartFromFileManager() {
         do {
             cart = try CartPersistenceManager.manager.getCart()
+            print(cart.count)
         } catch {
             print("Error getting cart: \(error)")
         }
@@ -37,9 +74,61 @@ class AzureCartViewController: UIViewController {
     private func setDelegates() {
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.emptyDataSetSource = self
-        tableView.emptyDataSetDelegate = self
-        tableView.backgroundView = UIView()
+    }
+    
+    private func checkDataSet() {
+        DispatchQueue.main.async {
+            if self.cart.count == 0 {
+                self.tableView.isHidden = true
+                self.emptyTextHeader.isHidden = false
+                self.emptyTextDescrption.isHidden = false
+            } else {
+                self.tableView.isHidden = false
+                self.emptyTextHeader.isHidden = true
+                self.emptyTextDescrption.isHidden = true
+            }
+        }
+        
+    }
+    
+    private func addSubviews() {
+        view.addSubview(tableView)
+        view.addSubview(emptyTextHeader)
+        view.addSubview(emptyTextDescrption)
+        view.addSubview(activityIndicator)
+    }
+    
+    private func contrainSubviews() {
+        constrainTableView()
+        constrainEmptyTextHeader()
+        constrainEmptyTextDescription()
+        constrainActivityIndicator()
+    }
+    
+    private func constrainTableView() {
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        [tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)].forEach {$0.isActive = true}
+    }
+    
+    private func constrainEmptyTextHeader() {
+        emptyTextHeader.translatesAutoresizingMaskIntoConstraints = false
+        [emptyTextHeader.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+         emptyTextHeader.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -20)].forEach {$0.isActive = true}
+    }
+    
+    private func constrainEmptyTextDescription() {
+        emptyTextDescrption.translatesAutoresizingMaskIntoConstraints = false
+        [emptyTextDescrption.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+         emptyTextDescrption.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: 20)].forEach {$0.isActive = true}
+    }
+    
+    private func constrainActivityIndicator(){
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        [activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+         activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)].forEach {$0.isActive = true}
     }
     
 }
@@ -50,23 +139,47 @@ extension AzureCartViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return AzureCartTableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ResuseIdentifier.AzureCartTableCell.rawValue, for: indexPath) as? AzureCartTableViewCell else {return UITableViewCell()}
+        let oneRecipe = cart[indexPath.row]
+        let urlString = "https://spoonacular.com/recipeImages/\(oneRecipe.id)-240x150.jpg"
+        cell.recipeTitle.text = oneRecipe.title
+        cell.recipeInfo.text = "There are \(Int(oneRecipe.numberInCart ?? 0)) in the cart"
+        
+        ImageManager.manager.getImage(urlStr: urlString) { (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let error):
+                    print("Error getting image: \(error)")
+                    cell.recipeImageView.image = UIImage(named: "noImage")
+                case .success(let image):
+                    cell.recipeImageView.image = image
+                }
+            }
+        }
+        
+        return cell
     }
     
 }
 
-extension AzureCartViewController: UITableViewDelegate {}
+extension AzureCartViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        return 500
+    }
+}
 
 extension AzureCartViewController: EmptyDataSetSource, EmptyDataSetDelegate {
     
     func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-        let titleString = "No Recipes in Cart"
+        let titleString = "No Recipes"
         let titleAttributes = [NSAttributedString.Key.font: UIFont.init(descriptor: .preferredFontDescriptor(withTextStyle: .headline), size: 25)]
         return NSAttributedString(string: titleString, attributes: titleAttributes)
     }
     
     func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-        let descriptionString = "Recipes saved to cart will show here"
+        let descriptionString = "Recipes saved"
         let descriptionAttributes = [NSAttributedString.Key.font: UIFont.init(descriptor: .preferredFontDescriptor(withTextStyle: .subheadline), size: 20)]
         return NSAttributedString(string: descriptionString, attributes: descriptionAttributes)
     }

@@ -91,10 +91,12 @@ class AzureDetailViewController: UIViewController {
                 if cart[index].id == currentRecipe.id {
 //                    try? CartPersistenceManager.manager.delete(element: cart, atIndex: index)
                     deleteFromCart(from: cart, at: index)
+                    getCartFromPersistence()
                 }
                    }
             if let currentRecipe = recipe {
                 saveToCart(recipe: currentRecipe)
+                getCartFromPersistence()
             }
         }
     }
