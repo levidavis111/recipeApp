@@ -10,6 +10,8 @@ import UIKit
 
 class AzureDetailViewController: UIViewController {
     
+    //    MARK:- Instance Variables
+    
     var recipe: Recipe?
     private var cart: [Recipe] = []
     private var padding: CGFloat = 10.0
@@ -21,6 +23,8 @@ class AzureDetailViewController: UIViewController {
             }
         }
     }
+    
+    //    MARK:- Instantiate UI Elements
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -69,6 +73,8 @@ class AzureDetailViewController: UIViewController {
         return spinner
     }()
     
+    //    MARK:- Override Methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -84,8 +90,9 @@ class AzureDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         getCartFromPersistence()
         setStepperValue()
-        
     }
+    
+    //    MARK:- Obj-C Methods
     
     @objc private func cartStepperButtonPressed(sender: UIStepper!) {
         DispatchQueue.main.async {[weak self] in
@@ -93,16 +100,28 @@ class AzureDetailViewController: UIViewController {
         }
         recipe?.numberInCart = cartStepper.value
         numberInCart = cartStepper.value
-        
+
         if let currentRecipe = recipe {
-            for index in 0..<cart.count {
-                if cart[index].id == currentRecipe.id {
-                    deleteFromCart(from: cart, at: index)
-                    if cartStepper.value > 0 {
-                        saveToCart(recipe: currentRecipe)
+            let existsInCart = currentRecipe.existsInCart()
+            switch existsInCart {
+            case false:
+                self.saveToCart(recipe: currentRecipe)
+                self.getCartFromPersistence()
+            case true:
+                for index in 0..<cart.count {
+                    if cart[index].id == currentRecipe.id {
+                        deleteFromCart(from: cart, at: index)
                     }
                 }
+                
+                if cartStepper.value > 0 {
+                    saveToCart(recipe: currentRecipe)
+                }
+                
+            default:
+                saveToCart(recipe: currentRecipe)
             }
+            
             DispatchQueue.main.async {[weak self] in
                 self?.getCartFromPersistence()
                 self?.activityIndicator.stopAnimating()
@@ -111,6 +130,7 @@ class AzureDetailViewController: UIViewController {
     }
     
     @objc private func cartButtonPressed() {
+        //        Transition to cartVC
         let cartVC = AzureCartViewController()
         DispatchQueue.main.async {[weak self] in
             self?.activityIndicator.startAnimating()
@@ -123,6 +143,8 @@ class AzureDetailViewController: UIViewController {
             }
         }
     }
+    
+    //    MARK:- Private Methods
     
     private func saveToCart(recipe: Recipe) {
         
@@ -152,6 +174,7 @@ class AzureDetailViewController: UIViewController {
     }
     
     private func setStepperValue() {
+        //        Set initial stepper value to the number of the current item in the cart
         if let currentRecipe = recipe {
             
             let existsInCart = currentRecipe.existsInCart()
@@ -173,17 +196,6 @@ class AzureDetailViewController: UIViewController {
             }
             cartLabel.text = "There are \(Int(self.numberInCart)) in your cart"
         }
-        
-    }
-    
-    private func setNavBar() {
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.view.backgroundColor = .white
-        self.navigationController?.navigationBar.isHidden = false
-        
-        let rightButton = UIBarButtonItem(image: UIImage(systemName: "cart"), style: .plain, target: self, action: #selector(cartButtonPressed))
-        
-        self.navigationItem.rightBarButtonItem = rightButton
         
     }
     
@@ -221,6 +233,32 @@ class AzureDetailViewController: UIViewController {
             recipeTitleLabel.text = "Uh oh!"
             recipeInfoLabel.text = "There's been a mixup in the kitchen! Go back and search again! Sowwy!!!"
         }
+    }
+    
+    private func showAlert(title: String, message: String) {
+        activityIndicator.startAnimating()
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "Okay", style: .default, handler: nil)
+        alert.addAction(action)
+        DispatchQueue.main.async {[weak self] in
+            self?.present(alert, animated: true) {
+                self?.activityIndicator.stopAnimating()
+            }
+        }
+        
+    }
+    
+    //    MARK:- Constrain UI Elements
+    
+    private func setNavBar() {
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.view.backgroundColor = .white
+        self.navigationController?.navigationBar.isHidden = false
+        
+        let rightButton = UIBarButtonItem(image: UIImage(systemName: "cart"), style: .plain, target: self, action: #selector(cartButtonPressed))
+        
+        self.navigationItem.rightBarButtonItem = rightButton
+        
     }
     
     private func addSubViews() {

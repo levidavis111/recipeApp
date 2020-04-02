@@ -10,6 +10,8 @@ import UIKit
 
 class AzureCartTableViewCell: UITableViewCell {
     
+//    MARK:- Instance Variables
+    
     private let padding: CGFloat = 10.0
     
     lazy var recipeImageView: UIImageView = {
@@ -19,6 +21,8 @@ class AzureCartTableViewCell: UITableViewCell {
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
+    
+//    MARK:- Instantiate UI Elements
     
     lazy var recipeTitle: UILabel = {
         let label = UILabel()
@@ -38,6 +42,8 @@ class AzureCartTableViewCell: UITableViewCell {
         return label
     }()
     
+//    MARK:- Override Methods
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubviews()
@@ -51,6 +57,8 @@ class AzureCartTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+//    MARK:- Private Methods
     
     private func roundCellCorners() {
         let shadowOffset = CGSize(width: 0, height: 2)
@@ -70,6 +78,8 @@ class AzureCartTableViewCell: UITableViewCell {
         
         contentView.layoutIfNeeded()
     }
+    
+//    MARK:- Constrain UI Elements
     
     private func addSubviews() {
         contentView.addSubview(recipeImageView)

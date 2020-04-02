@@ -10,6 +10,8 @@ import UIKit
 
 class AzureCartViewController: UIViewController {
     
+    //    MARK:- Instance Variables
+    
     private var cart: [Recipe] = [] {
         didSet {
             DispatchQueue.main.async {[weak self] in
@@ -18,6 +20,8 @@ class AzureCartViewController: UIViewController {
             }
         }
     }
+    
+    //    MARK:- Instantiate UI Elements
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -49,6 +53,8 @@ class AzureCartViewController: UIViewController {
         return spinner
     }()
     
+    //    MARK:- Override Methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -64,21 +70,23 @@ class AzureCartViewController: UIViewController {
         checkDataSet()
     }
     
-    private func getCartFromFileManager() {
-        do {
-            cart = try CartPersistenceManager.manager.getCart()
-            print(cart.count)
-        } catch {
-            print("Error getting cart: \(error)")
-        }
-    }
+    //    MARK:- Private Methods
     
     private func setDelegates() {
         tableView.delegate = self
         tableView.dataSource = self
     }
     
+    private func getCartFromFileManager() {
+        do {
+            cart = try CartPersistenceManager.manager.getCart()
+        } catch {
+            print("Error getting cart: \(error)")
+        }
+    }
+    
     private func checkDataSet() {
+        //        Display a message if there are no items in the cart
         DispatchQueue.main.async {[weak self] in
             if self?.cart.count == 0 {
                 self?.tableView.isHidden = true
@@ -90,8 +98,9 @@ class AzureCartViewController: UIViewController {
                 self?.emptyTextDescrption.isHidden = true
             }
         }
-        
     }
+    
+    //    MARK:- Constrain UI Elements
     
     private func addSubviews() {
         view.addSubview(tableView)
@@ -144,17 +153,21 @@ extension AzureCartViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ResuseIdentifier.AzureCartTableCell.rawValue, for: indexPath) as? AzureCartTableViewCell else {return UITableViewCell()}
         let oneRecipe = cart[indexPath.row]
         let urlString = "https://spoonacular.com/recipeImages/\(oneRecipe.id)-240x150.jpg"
+        //        Set cell properties
         cell.recipeTitle.text = oneRecipe.title
         cell.recipeInfo.text = "There are \(Int(oneRecipe.numberInCart ?? 0)) in the cart"
-        
+        //        Get cell images
         ImageManager.manager.getImage(urlStr: urlString) { (result) in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async {[weak self] in
+                self?.activityIndicator.startAnimating()
                 switch result {
                 case .failure(let error):
                     print("Error getting image: \(error)")
                     cell.recipeImageView.image = UIImage(named: "noImage")
+                    self?.activityIndicator.stopAnimating()
                 case .success(let image):
                     cell.recipeImageView.image = image
+                    self?.activityIndicator.stopAnimating()
                 }
             }
         }
@@ -167,6 +180,7 @@ extension AzureCartViewController: UITableViewDataSource {
 extension AzureCartViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        Transition to detailVC
         let detailVC = AzureDetailViewController()
         let oneRecipe = cart[indexPath.row]
         detailVC.recipe = oneRecipe

@@ -11,6 +11,8 @@ import EmptyDataSet_Swift
 
 class AzureBrowseScreenViewController: UIViewController {
     
+    //    MARK:- Instance Variables
+    
     private let cellSpacing: CGFloat = 10.0
     
     private let recipeClientService = RecipeClientService()
@@ -31,6 +33,8 @@ class AzureBrowseScreenViewController: UIViewController {
             }
         }
     }
+    
+    //    MARK:- Intanstiate UI Elements
     
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
@@ -54,6 +58,8 @@ class AzureBrowseScreenViewController: UIViewController {
         return spinner
     }()
     
+    //    MARK:- Override Methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubviews()
@@ -62,7 +68,10 @@ class AzureBrowseScreenViewController: UIViewController {
         setNavBar()
     }
     
+    //    MARK:- Obj-C Methods
+    
     @objc private func cartButtonPressed() {
+        //        Transition to cartVC
         let cartVC = AzureCartViewController()
         DispatchQueue.main.async {[weak self] in
             self?.activityIndicator.startAnimating()
@@ -75,8 +84,9 @@ class AzureBrowseScreenViewController: UIViewController {
             }
             
         }
-        
     }
+    
+    //    MARK:- Private Methods
     
     private func getRecipes() {
         DispatchQueue.main.async {[weak self] in
@@ -105,6 +115,8 @@ class AzureBrowseScreenViewController: UIViewController {
         collectionView.emptyDataSetSource = self
         collectionView.backgroundView = UIView()
     }
+    
+    //    MARK:- Constrain UI Elements
     
     private func setNavBar() {
         self.navigationController?.navigationBar.isTranslucent = false
@@ -162,24 +174,24 @@ extension AzureBrowseScreenViewController: UICollectionViewDataSource {
         
         let oneRecipe = recipes[indexPath.row]
         let imageUrl = "https://spoonacular.com/recipeImages/\(oneRecipe.id)-240x150.jpg"
-        
-        cell.imageView.image = UIImage(systemName: "person")
+        //        Set cell properties
         cell.recipeTitle.text = oneRecipe.title
         cell.recipeInfo.text = "Makes \(oneRecipe.servings) servings in \(oneRecipe.readyInMinutes) minutes!"
-        
+        //        Get cell images
         ImageManager.manager.getImage(urlStr: imageUrl) {(result) in
-            switch result {
-            case .failure(let error):
-                print("Error getting image: \(error)")
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {[weak self] in
+                self?.activityIndicator.startAnimating()
+                switch result {
+                case .failure(let error):
+                    print("Error getting image: \(error)")
                     cell.imageView.image = UIImage(named: "noImage")
-                }
-            case .success(let image):
-                DispatchQueue.main.async {
+                    self?.activityIndicator.stopAnimating()
+                case .success(let image):
                     cell.imageView.image = image
-                    
+                    self?.activityIndicator.stopAnimating()
                 }
             }
+            
         }
         
         return cell
@@ -189,6 +201,7 @@ extension AzureBrowseScreenViewController: UICollectionViewDataSource {
 
 extension AzureBrowseScreenViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        //        Transition to detail VC
         let detailVC = AzureDetailViewController()
         let oneRecipe = recipes[indexPath.row]
         detailVC.recipe = oneRecipe
@@ -252,7 +265,7 @@ extension AzureBrowseScreenViewController: UISearchBarDelegate {
 
 
 extension AzureBrowseScreenViewController: EmptyDataSetSource, EmptyDataSetDelegate {
-    
+    //    Show a message if data set is empty.
     func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         let titleString = "No Recipes Loaded"
         let titleAttributes = [NSAttributedString.Key.font: UIFont.init(descriptor: .preferredFontDescriptor(withTextStyle: .headline), size: 25)]
