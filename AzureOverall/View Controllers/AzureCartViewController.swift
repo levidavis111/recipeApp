@@ -7,15 +7,14 @@
 //
 
 import UIKit
-import EmptyDataSet_Swift
 
 class AzureCartViewController: UIViewController {
     
-    var cart: [Recipe] = [] {
+    private var cart: [Recipe] = [] {
         didSet {
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.checkDataSet()
+            DispatchQueue.main.async {[weak self] in
+                self?.tableView.reloadData()
+                self?.checkDataSet()
             }
         }
     }
@@ -49,7 +48,7 @@ class AzureCartViewController: UIViewController {
         spinner.hidesWhenStopped = true
         return spinner
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -58,9 +57,12 @@ class AzureCartViewController: UIViewController {
         contrainSubviews()
         setDelegates()
         checkDataSet()
-        // Do any additional setup after loading the view.
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        getCartFromFileManager()
+        checkDataSet()
+    }
     
     private func getCartFromFileManager() {
         do {
@@ -77,15 +79,15 @@ class AzureCartViewController: UIViewController {
     }
     
     private func checkDataSet() {
-        DispatchQueue.main.async {
-            if self.cart.count == 0 {
-                self.tableView.isHidden = true
-                self.emptyTextHeader.isHidden = false
-                self.emptyTextDescrption.isHidden = false
+        DispatchQueue.main.async {[weak self] in
+            if self?.cart.count == 0 {
+                self?.tableView.isHidden = true
+                self?.emptyTextHeader.isHidden = false
+                self?.emptyTextDescrption.isHidden = false
             } else {
-                self.tableView.isHidden = false
-                self.emptyTextHeader.isHidden = true
-                self.emptyTextDescrption.isHidden = true
+                self?.tableView.isHidden = false
+                self?.emptyTextHeader.isHidden = true
+                self?.emptyTextDescrption.isHidden = true
             }
         }
         
@@ -164,23 +166,25 @@ extension AzureCartViewController: UITableViewDataSource {
 
 extension AzureCartViewController: UITableViewDelegate {
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detailVC = AzureDetailViewController()
+        let oneRecipe = cart[indexPath.row]
+        detailVC.recipe = oneRecipe
+        DispatchQueue.main.async {[weak self] in
+            self?.activityIndicator.startAnimating()
+        }
         
+        UIView.transition(from: self.view, to: detailVC.view, duration: 0.8, options: .transitionCrossDissolve) { [weak self](_) in
+            
+            detailVC.recipe = oneRecipe
+            self?.navigationController?.pushViewController(detailVC, animated: true)
+            DispatchQueue.main.async {
+                self?.activityIndicator.stopAnimating()
+            }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 500
-    }
-}
-
-extension AzureCartViewController: EmptyDataSetSource, EmptyDataSetDelegate {
-    
-    func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-        let titleString = "No Recipes"
-        let titleAttributes = [NSAttributedString.Key.font: UIFont.init(descriptor: .preferredFontDescriptor(withTextStyle: .headline), size: 25)]
-        return NSAttributedString(string: titleString, attributes: titleAttributes)
-    }
-    
-    func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-        let descriptionString = "Recipes saved"
-        let descriptionAttributes = [NSAttributedString.Key.font: UIFont.init(descriptor: .preferredFontDescriptor(withTextStyle: .subheadline), size: 20)]
-        return NSAttributedString(string: descriptionString, attributes: descriptionAttributes)
     }
 }

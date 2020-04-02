@@ -17,6 +17,7 @@ class AzureBrowseScreenViewController: UIViewController {
     private var searchTerm: String = "" {
         didSet {
             DispatchQueue.main.async {[weak self] in
+                self?.activityIndicator.stopAnimating()
                 self?.getRecipes()
             }
         }
@@ -52,7 +53,7 @@ class AzureBrowseScreenViewController: UIViewController {
         spinner.hidesWhenStopped = true
         return spinner
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubviews()
@@ -63,8 +64,11 @@ class AzureBrowseScreenViewController: UIViewController {
     
     @objc private func cartButtonPressed() {
         let cartVC = AzureCartViewController()
+        DispatchQueue.main.async {[weak self] in
+            self?.activityIndicator.startAnimating()
+        }
         UIView.transition(from: self.view, to: cartVC.view, duration: 0.8, options: .transitionCrossDissolve) { [weak self](_) in
-           
+            
             self?.navigationController?.pushViewController(cartVC, animated: true)
             DispatchQueue.main.async {
                 self?.activityIndicator.stopAnimating()
@@ -75,15 +79,20 @@ class AzureBrowseScreenViewController: UIViewController {
     }
     
     private func getRecipes() {
+        DispatchQueue.main.async {[weak self] in
+            self?.activityIndicator.startAnimating()
+        }
+        
         recipeClientService.getRecipeData(searchTerm: searchTerm) { [weak self](result) in
-            DispatchQueue.main.async {
-                self?.activityIndicator.startAnimating()
-            }
+            
             switch result {
             case .success(let recipes):
                 self?.recipes = recipes
             case .failure(let error):
-                print(error)
+                print("Error getting recipes: \(error)")
+                DispatchQueue.main.async {
+                    self?.activityIndicator.stopAnimating()
+                }
             }
         }
     }
@@ -140,7 +149,7 @@ class AzureBrowseScreenViewController: UIViewController {
         [activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
          activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)].forEach {$0.isActive = true}
     }
-
+    
 }
 
 extension AzureBrowseScreenViewController: UICollectionViewDataSource {
@@ -161,7 +170,7 @@ extension AzureBrowseScreenViewController: UICollectionViewDataSource {
         ImageManager.manager.getImage(urlStr: imageUrl) {(result) in
             switch result {
             case .failure(let error):
-                print(error)
+                print("Error getting image: \(error)")
                 DispatchQueue.main.async {
                     cell.imageView.image = UIImage(named: "noImage")
                 }
@@ -188,7 +197,7 @@ extension AzureBrowseScreenViewController: UICollectionViewDelegate {
         }
         
         UIView.transition(from: self.view, to: detailVC.view, duration: 0.8, options: .transitionCrossDissolve) { [weak self](_) in
-           
+            
             detailVC.recipe = oneRecipe
             self?.navigationController?.pushViewController(detailVC, animated: true)
             DispatchQueue.main.async {
@@ -200,27 +209,27 @@ extension AzureBrowseScreenViewController: UICollectionViewDelegate {
 }
 
 extension AzureBrowseScreenViewController: UICollectionViewDelegateFlowLayout {
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    let numCells: CGFloat = 1
-    let numSpaces: CGFloat = numCells + 1
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let numCells: CGFloat = 1
+        let numSpaces: CGFloat = numCells + 1
+        
+        let screenWidth = UIScreen.main.bounds.width
+        let screenheight = UIScreen.main.bounds.height
+        
+        return CGSize(width: (screenWidth - (cellSpacing * numSpaces)) / numCells, height: screenheight / 2)
+    }
     
-    let screenWidth = UIScreen.main.bounds.width
-    let screenheight = UIScreen.main.bounds.height
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: cellSpacing, left: cellSpacing, bottom: 0, right: cellSpacing)
+    }
     
-    return CGSize(width: (screenWidth - (cellSpacing * numSpaces)) / numCells, height: screenheight / 2)
-  }
-  
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-    return UIEdgeInsets(top: cellSpacing, left: cellSpacing, bottom: 0, right: cellSpacing)
-  }
-  
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-    return cellSpacing
-  }
-  
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-    return cellSpacing
-  }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return cellSpacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return cellSpacing
+    }
 }
 
 extension AzureBrowseScreenViewController: UISearchBarDelegate {
@@ -240,7 +249,6 @@ extension AzureBrowseScreenViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
     }
 }
-
 
 
 extension AzureBrowseScreenViewController: EmptyDataSetSource, EmptyDataSetDelegate {

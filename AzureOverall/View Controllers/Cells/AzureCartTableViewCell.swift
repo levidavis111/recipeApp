@@ -10,7 +10,7 @@ import UIKit
 
 class AzureCartTableViewCell: UITableViewCell {
     
-    let padding: CGFloat = 10.0
+    private let padding: CGFloat = 10.0
     
     lazy var recipeImageView: UIImageView = {
         let imageView = UIImageView()
@@ -37,7 +37,7 @@ class AzureCartTableViewCell: UITableViewCell {
         label.font = UIFont(name: "Georgia", size: 16)
         return label
     }()
-
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubviews()
@@ -45,7 +45,7 @@ class AzureCartTableViewCell: UITableViewCell {
     }
     
     override func layoutSubviews() {
-       roundCellCorners()
+        roundCellCorners()
     }
     
     required init?(coder: NSCoder) {
@@ -87,22 +87,20 @@ class AzureCartTableViewCell: UITableViewCell {
         recipeImageView.translatesAutoresizingMaskIntoConstraints = false
         [recipeImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor), recipeImageView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: padding),
          recipeImageView.widthAnchor.constraint(equalToConstant: contentView.safeAreaLayoutGuide.layoutFrame.width / 1.5),
-         recipeImageView.heightAnchor.constraint(equalToConstant: 250),
-         recipeImageView.bottomAnchor.constraint(equalTo: recipeTitle.topAnchor, constant: -padding)].forEach {$0.isActive = true}
+         recipeImageView.heightAnchor.constraint(equalToConstant: 250)].forEach {$0.isActive = true}
     }
     
     private func constrainRecipeTitle() {
         recipeTitle.translatesAutoresizingMaskIntoConstraints = false
         [recipeTitle.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
-         recipeTitle.centerYAnchor.constraint(equalTo: recipeImageView.bottomAnchor, constant: 100)].forEach {$0.isActive = true}
+         recipeTitle.topAnchor.constraint(equalTo: recipeImageView.bottomAnchor, constant: 100)].forEach {$0.isActive = true}
     }
     
     private func constrainRecipeInfo(){
         recipeInfo.translatesAutoresizingMaskIntoConstraints = false
-        [recipeInfo.topAnchor.constraint(equalTo: recipeTitle.bottomAnchor, constant: padding),
-         recipeInfo.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: padding),
-         recipeInfo.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
-         recipeInfo.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -padding)].forEach {$0.isActive = true}
+        [recipeInfo.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+         recipeInfo.topAnchor.constraint(lessThanOrEqualTo: recipeTitle.bottomAnchor, constant: padding),
+         recipeInfo.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding)].forEach {$0.isActive = true}
     }
     
 }

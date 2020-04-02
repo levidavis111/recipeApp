@@ -18,7 +18,7 @@ class RecipeClientService {
 
             urlComponents.queryItems = [
                 URLQueryItem(name: "query", value: "\(searchTerm)"),
-                URLQueryItem(name: "number", value: "2"),
+                URLQueryItem(name: "number", value: "4"),
                 URLQueryItem(name: "apiKey", value: "\(Secret.apiKey)")
             ]
   
@@ -59,57 +59,3 @@ class RecipeClientService {
         return []
     }
 }
-
-
-
-/**
- class NYTArticleService {
-     let session = URLSession(configuration: .default)
-     
-     var dataTask: URLSessionDataTask?
-     
-     func getArticleResults(completion: @escaping (Result<[ArticleElement], AppError>) -> ()) {
-         dataTask?.cancel()
-         
-         if var urlComponents = URLComponents(string: "https://s1.nyt.com/ios-newsreader/candidates/test/articles.json") {
-             guard let url = urlComponents.url else {
-                 return
-             }
-             dataTask = session.dataTask(with: url) {[weak self] data, response, error in
-                 defer {
-                     self?.dataTask = nil
-                 }
-                 if let error = error {
-                     print(error)
-                 } else if
-                     let data = data,
-                     let response = response as? HTTPURLResponse,
-                     response.statusCode == 200 {
-                     
-                     let results = self?.getArticles(from: data)
-                     
-                     if let articles = results {
-                         DispatchQueue.main.async {
-                             completion(.success(articles))
-                         }
-                     } else {
-                         completion(.failure(.invalidJSONResponse))
-                     }
-                 }
-             }
-             dataTask?.resume()
-         }
-     }
-     
-     func getArticles(from data: Data) -> [ArticleElement] {
-         
-         do {
-             let response = try JSONDecoder().decode(Article.self, from: data)
-             return response
-         } catch {
-             print(error)
-         }
-         return []
-     }
- }
- */

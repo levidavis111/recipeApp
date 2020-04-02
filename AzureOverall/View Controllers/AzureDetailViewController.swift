@@ -15,17 +15,16 @@ class AzureDetailViewController: UIViewController {
     private var padding: CGFloat = 10.0
     private var numberInCart: Double = 0 {
         didSet {
-            DispatchQueue.main.async {
-                self.cartLabel.text = "There are \(self.numberInCart) in your cart"
+            DispatchQueue.main.async {[weak self] in
+                self?.cartLabel.text = "There are \(Int(self?.numberInCart ?? 0)) in your cart"
+                self?.activityIndicator.stopAnimating()
             }
         }
     }
     
-    
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        
         return imageView
     }()
     
@@ -34,7 +33,7 @@ class AzureDetailViewController: UIViewController {
         label.textColor = .black
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont(name: "Georgia-Bold", size: 22)
+        label.font = UIFont(name: "Georgia-Bold", size: 24)
         return label
     }()
     
@@ -43,7 +42,7 @@ class AzureDetailViewController: UIViewController {
         label.textColor = .black
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont(name: "Georgia", size: 16)
+        label.font = UIFont(name: "Georgia", size: 18)
         return label
     }()
     
@@ -60,10 +59,10 @@ class AzureDetailViewController: UIViewController {
         let label = UILabel()
         label.textColor = .black
         label.textAlignment = .center
-        label.font = UIFont(name: "Georgia", size: 16)
+        label.font = UIFont(name: "Georgia", size: 18)
         return label
     }()
-
+    
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.hidesWhenStopped = true
@@ -79,29 +78,54 @@ class AzureDetailViewController: UIViewController {
         setText()
         getCartFromPersistence()
         setStepperValue()
+        setNavBar()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        getCartFromPersistence()
+        setStepperValue()
+        
     }
     
     @objc private func cartStepperButtonPressed(sender: UIStepper!) {
-        
+        DispatchQueue.main.async {[weak self] in
+            self?.activityIndicator.startAnimating()
+        }
         recipe?.numberInCart = cartStepper.value
         numberInCart = cartStepper.value
         
         if let currentRecipe = recipe {
             for index in 0..<cart.count {
                 if cart[index].id == currentRecipe.id {
-//                    try? CartPersistenceManager.manager.delete(element: cart, atIndex: index)
                     deleteFromCart(from: cart, at: index)
-                    getCartFromPersistence()
+                    if cartStepper.value > 0 {
+                        saveToCart(recipe: currentRecipe)
+                    }
                 }
-                   }
-            if let currentRecipe = recipe {
-                saveToCart(recipe: currentRecipe)
-                getCartFromPersistence()
+            }
+            DispatchQueue.main.async {[weak self] in
+                self?.getCartFromPersistence()
+                self?.activityIndicator.stopAnimating()
+            }
+        }
+    }
+    
+    @objc private func cartButtonPressed() {
+        let cartVC = AzureCartViewController()
+        DispatchQueue.main.async {[weak self] in
+            self?.activityIndicator.startAnimating()
+        }
+        UIView.transition(from: self.view, to: cartVC.view, duration: 0.8, options: .transitionCrossDissolve) { [weak self](_) in
+            
+            self?.navigationController?.pushViewController(cartVC, animated: true)
+            DispatchQueue.main.async {
+                self?.activityIndicator.stopAnimating()
             }
         }
     }
     
     private func saveToCart(recipe: Recipe) {
+        
         do {
             try CartPersistenceManager.manager.saveRecipeToCart(recipe: recipe)
         } catch {
@@ -129,7 +153,7 @@ class AzureDetailViewController: UIViewController {
     
     private func setStepperValue() {
         if let currentRecipe = recipe {
-        
+            
             let existsInCart = currentRecipe.existsInCart()
             switch existsInCart {
             case false:
@@ -147,8 +171,19 @@ class AzureDetailViewController: UIViewController {
                 cartStepper.value = 0
                 numberInCart = 0
             }
-            cartLabel.text = "There are \(self.numberInCart) in your cart"
+            cartLabel.text = "There are \(Int(self.numberInCart)) in your cart"
         }
+        
+    }
+    
+    private func setNavBar() {
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.view.backgroundColor = .white
+        self.navigationController?.navigationBar.isHidden = false
+        
+        let rightButton = UIBarButtonItem(image: UIImage(systemName: "cart"), style: .plain, target: self, action: #selector(cartButtonPressed))
+        
+        self.navigationItem.rightBarButtonItem = rightButton
         
     }
     
@@ -162,7 +197,7 @@ class AzureDetailViewController: UIViewController {
                 DispatchQueue.main.async {
                     switch result {
                     case .failure(let error):
-                        print(error)
+                        print("Error setting image view: \(error)")
                         self?.imageView.image = UIImage(named: "noImage")
                         self?.activityIndicator.stopAnimating()
                     case .success(let image):
@@ -248,5 +283,5 @@ class AzureDetailViewController: UIViewController {
         [activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
          activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)].forEach {$0.isActive = true}
     }
-
+    
 }
