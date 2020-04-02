@@ -11,7 +11,16 @@ import UIKit
 class AzureDetailViewController: UIViewController {
     
     var recipe: Recipe?
-    var cart: [Recipe] = []
+    private var cart: [Recipe] = []
+    private var padding: CGFloat = 10.0
+    private var numberInCart: Double = 0 {
+        didSet {
+            DispatchQueue.main.async {
+                self.cartLabel.text = "There are \(self.numberInCart) in your cart"
+            }
+        }
+    }
+    
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -46,6 +55,14 @@ class AzureDetailViewController: UIViewController {
         stepper.addTarget(self, action: #selector(cartStepperButtonPressed), for: .touchUpInside)
         return stepper
     }()
+    
+    private lazy var cartLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.textAlignment = .center
+        label.font = UIFont(name: "Georgia", size: 16)
+        return label
+    }()
 
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
@@ -67,40 +84,22 @@ class AzureDetailViewController: UIViewController {
     @objc private func cartStepperButtonPressed(sender: UIStepper!) {
         
         recipe?.numberInCart = cartStepper.value
+        numberInCart = cartStepper.value
         
         if let currentRecipe = recipe {
             for index in 0..<cart.count {
                 if cart[index].id == currentRecipe.id {
-                    try? CartPersistenceManager.manager.delete(element: cart, atIndex: index)
+//                    try? CartPersistenceManager.manager.delete(element: cart, atIndex: index)
+                    deleteFromCart(from: cart, at: index)
                 }
                    }
             if let currentRecipe = recipe {
-                saveCart(recipe: currentRecipe)
+                saveToCart(recipe: currentRecipe)
             }
         }
-       
-        /**
-         if cartStepper.value == 0{
-         itemsInCartLable.text = "Add to cart"}else{
-         itemsInCartLable.text = "\(Int(cartStepper.value).description) Items"}
-         recipe?.itemsInCart = Int(cartStepper.value)
-         
-         if let imageData = recipeImageView.image  {
-             recipe?.persistedImage = imageData.jpegData(compressionQuality: 1)
-         }
-         
-         if RecipePersistence.manager.checkIfSave(id: recipe?.id ?? 0){
-             try? RecipePersistence.manager.editRecipe(id: recipe?.id ?? 0, newElement: recipe!)
-             if cartStepper.value == 0{
-                 try? RecipePersistence.manager.deleteRecipe(id: recipe?.id ?? 0)
-             }
-         }else {
-             try? RecipePersistence.manager.saveRecipe(info: recipe!)
-         }
-         */
     }
     
-    private func saveCart(recipe: Recipe) {
+    private func saveToCart(recipe: Recipe) {
         do {
             try CartPersistenceManager.manager.saveRecipeToCart(recipe: recipe)
         } catch {
@@ -109,11 +108,18 @@ class AzureDetailViewController: UIViewController {
         
     }
     
+    private func deleteFromCart(from cart: [Recipe], at index: Int) {
+        do {
+            try CartPersistenceManager.manager.delete(element: cart, atIndex: index)
+        } catch {
+            print("Error deleting from file manager: \(error)")
+        }
+    }
+    
     private func getCartFromPersistence() {
         do {
             let savedCart = try CartPersistenceManager.manager.getCart()
             self.cart = savedCart
-            print(self.cart)
         } catch {
             print("Error getting cart: \(error)")
         }
@@ -126,16 +132,20 @@ class AzureDetailViewController: UIViewController {
             switch existsInCart {
             case false:
                 cartStepper.value = 0
+                numberInCart = 0
             case true:
                 for index in 0..<cart.count {
                     if cart[index].id == currentRecipe.id {
                         cartStepper.value = cart[index].numberInCart ?? 0
+                        numberInCart = cart[index].numberInCart ?? 0
                     }
                 }
                 
             default:
                 cartStepper.value = 0
+                numberInCart = 0
             }
+            cartLabel.text = "There are \(self.numberInCart) in your cart"
         }
         
     }
@@ -181,6 +191,7 @@ class AzureDetailViewController: UIViewController {
         view.addSubview(recipeTitleLabel)
         view.addSubview(recipeInfoLabel)
         view.addSubview(cartStepper)
+        view.addSubview(cartLabel)
         view.addSubview(activityIndicator)
     }
     
@@ -189,6 +200,7 @@ class AzureDetailViewController: UIViewController {
         constrainTitleLabel()
         constrainInfoLabel()
         constrainCartStepper()
+        constrainCartLabel()
         constrainActivityIndicator()
     }
     
@@ -203,23 +215,30 @@ class AzureDetailViewController: UIViewController {
     private func constrainTitleLabel() {
         recipeTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         [recipeTitleLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-         recipeTitleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 10),
+         recipeTitleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: padding),
          recipeTitleLabel.widthAnchor.constraint(equalToConstant: view.safeAreaLayoutGuide.layoutFrame.width / 1.25)].forEach {$0.isActive = true}
     }
     
     private func constrainInfoLabel() {
         recipeInfoLabel.translatesAutoresizingMaskIntoConstraints = false
         [recipeInfoLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-         recipeInfoLabel.topAnchor.constraint(equalTo: recipeTitleLabel.bottomAnchor, constant: 10),
-         recipeInfoLabel.bottomAnchor.constraint(lessThanOrEqualTo: cartStepper.topAnchor, constant: -10),
+         recipeInfoLabel.topAnchor.constraint(equalTo: recipeTitleLabel.bottomAnchor, constant: padding),
+         recipeInfoLabel.bottomAnchor.constraint(lessThanOrEqualTo: cartStepper.topAnchor, constant: -padding),
          recipeInfoLabel.widthAnchor.constraint(equalToConstant: view.safeAreaLayoutGuide.layoutFrame.width / 1.25)].forEach {$0.isActive = true}
     }
     
     private func constrainCartStepper() {
         cartStepper.translatesAutoresizingMaskIntoConstraints = false
         [cartStepper.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-         cartStepper.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10)
+         cartStepper.bottomAnchor.constraint(equalTo: cartLabel.topAnchor, constant: -padding)
             ].forEach {$0.isActive = true}
+    }
+    
+    private func constrainCartLabel() {
+        cartLabel.translatesAutoresizingMaskIntoConstraints = false
+        [cartLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+         cartLabel.topAnchor.constraint(equalTo: cartStepper.bottomAnchor, constant: padding),
+         cartLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding)].forEach {$0.isActive = true}
     }
     
     private func constrainActivityIndicator(){

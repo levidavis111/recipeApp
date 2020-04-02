@@ -1,18 +1,18 @@
 //
-//  AzureBrowseCollectionViewCell.swift
+//  AzureCartTableViewCell.swift
 //  AzureOverall
 //
-//  Created by Levi Davis on 4/1/20.
+//  Created by Levi Davis on 4/2/20.
 //  Copyright © 2020 Levi Davis. All rights reserved.
 //
 
 import UIKit
 
-class AzureBrowseCollectionViewCell: UICollectionViewCell {
+class AzureCartTableViewCell: UITableViewCell {
     
-    private let padding: CGFloat = 10.0
+    let padding: CGFloat = 10.0
     
-    lazy var imageView: UIImageView = {
+    lazy var recipeImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .clear
@@ -37,11 +37,11 @@ class AzureBrowseCollectionViewCell: UICollectionViewCell {
         label.font = UIFont(name: "Georgia", size: 12)
         return label
     }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubviews()
-        contrainSubviews()
+        constrainSubviews()
         roundCellCorners()
     }
     
@@ -69,36 +69,37 @@ class AzureBrowseCollectionViewCell: UICollectionViewCell {
     }
     
     private func addSubviews() {
-        contentView.addSubview(imageView)
+        contentView.addSubview(recipeImageView)
         contentView.addSubview(recipeTitle)
         contentView.addSubview(recipeInfo)
     }
     
-    private func contrainSubviews() {
-        constrainImageView()
+    private func constrainSubviews() {
+        constrainRecipeImageView()
         constrainRecipeTitle()
-        contrainRecipeInfo()
+        constrainRecipeInfo()
     }
     
-    private func constrainImageView() {
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        [imageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor), imageView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: padding),
-         imageView.widthAnchor.constraint(equalToConstant: contentView.safeAreaLayoutGuide.layoutFrame.width / 1.5),
-         imageView.heightAnchor.constraint(equalToConstant: contentView.safeAreaLayoutGuide.layoutFrame.height / 2)].forEach {$0.isActive = true}
+    private func constrainRecipeImageView() {
+        recipeImageView.translatesAutoresizingMaskIntoConstraints = false
+        [recipeImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor), recipeImageView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: padding),
+         recipeImageView.widthAnchor.constraint(equalToConstant: contentView.safeAreaLayoutGuide.layoutFrame.width / 1.5),
+         recipeImageView.heightAnchor.constraint(equalToConstant: contentView.safeAreaLayoutGuide.layoutFrame.height / 2)].forEach {$0.isActive = true}
     }
     
     private func constrainRecipeTitle() {
         recipeTitle.translatesAutoresizingMaskIntoConstraints = false
-        [recipeTitle.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: padding),
+        [recipeTitle.topAnchor.constraint(equalTo: recipeImageView.bottomAnchor, constant: padding),
          recipeTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
          recipeTitle.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -padding)].forEach {$0.isActive = true}
     }
     
-    private func contrainRecipeInfo() {
+    private func constrainRecipeInfo(){
         recipeInfo.translatesAutoresizingMaskIntoConstraints = false
         [recipeInfo.topAnchor.constraint(equalTo: recipeTitle.bottomAnchor, constant: padding),
          recipeInfo.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: padding),
          recipeInfo.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
          recipeInfo.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -padding)].forEach {$0.isActive = true}
     }
+    
 }

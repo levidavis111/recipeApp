@@ -27,6 +27,7 @@
 		FC44C4A6243548130096FEC7 /* CartPersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4A4243548130096FEC7 /* CartPersistenceManager.swift */; };
 		FC44C4A7243548130096FEC7 /* PersistenceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4A5243548130096FEC7 /* PersistenceHelper.swift */; };
 		FC44C4A9243552D00096FEC7 /* AzureCartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4A8243552D00096FEC7 /* AzureCartViewController.swift */; };
+		FC44C4AD243630550096FEC7 /* AzureCartTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4AC243630550096FEC7 /* AzureCartTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,7 @@
 		FC44C4A4243548130096FEC7 /* CartPersistenceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartPersistenceManager.swift; sourceTree = "<group>"; };
 		FC44C4A5243548130096FEC7 /* PersistenceHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceHelper.swift; sourceTree = "<group>"; };
 		FC44C4A8243552D00096FEC7 /* AzureCartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzureCartViewController.swift; sourceTree = "<group>"; };
+		FC44C4AC243630550096FEC7 /* AzureCartTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzureCartTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,6 +209,7 @@
 			isa = PBXGroup;
 			children = (
 				FC44C4982434FCD20096FEC7 /* AzureBrowseCollectionViewCell.swift */,
+				FC44C4AC243630550096FEC7 /* AzureCartTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -397,6 +400,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC44C4962434F2F00096FEC7 /* AzureBrowseScreenViewController.swift in Sources */,
+				FC44C4AD243630550096FEC7 /* AzureCartTableViewCell.swift in Sources */,
 				FC44C4A7243548130096FEC7 /* PersistenceHelper.swift in Sources */,
 				FC44C4A02435352B0096FEC7 /* ImageManager.swift in Sources */,
 				FC44C4992434FCD20096FEC7 /* AzureBrowseCollectionViewCell.swift in Sources */,
