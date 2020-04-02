@@ -11,6 +11,7 @@ import UIKit
 class AzureDetailViewController: UIViewController {
     
     var recipe: Recipe?
+    var cart: [Recipe] = []
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -42,7 +43,7 @@ class AzureDetailViewController: UIViewController {
         stepper.minimumValue = 0
         stepper.value = 0
         stepper.stepValue = 1
-        
+        stepper.addTarget(self, action: #selector(cartStepperButtonPressed), for: .touchUpInside)
         return stepper
     }()
 
@@ -59,6 +60,84 @@ class AzureDetailViewController: UIViewController {
         constrainSubviews()
         setImage()
         setText()
+        getCartFromPersistence()
+        setStepperValue()
+    }
+    
+    @objc private func cartStepperButtonPressed(sender: UIStepper!) {
+        
+        recipe?.numberInCart = cartStepper.value
+        
+        if let currentRecipe = recipe {
+            for index in 0..<cart.count {
+                if cart[index].id == currentRecipe.id {
+                    try? CartPersistenceManager.manager.delete(element: cart, atIndex: index)
+                }
+                   }
+            if let currentRecipe = recipe {
+                saveCart(recipe: currentRecipe)
+            }
+        }
+       
+        /**
+         if cartStepper.value == 0{
+         itemsInCartLable.text = "Add to cart"}else{
+         itemsInCartLable.text = "\(Int(cartStepper.value).description) Items"}
+         recipe?.itemsInCart = Int(cartStepper.value)
+         
+         if let imageData = recipeImageView.image  {
+             recipe?.persistedImage = imageData.jpegData(compressionQuality: 1)
+         }
+         
+         if RecipePersistence.manager.checkIfSave(id: recipe?.id ?? 0){
+             try? RecipePersistence.manager.editRecipe(id: recipe?.id ?? 0, newElement: recipe!)
+             if cartStepper.value == 0{
+                 try? RecipePersistence.manager.deleteRecipe(id: recipe?.id ?? 0)
+             }
+         }else {
+             try? RecipePersistence.manager.saveRecipe(info: recipe!)
+         }
+         */
+    }
+    
+    private func saveCart(recipe: Recipe) {
+        do {
+            try CartPersistenceManager.manager.saveRecipeToCart(recipe: recipe)
+        } catch {
+            print("Error saving cart: \(error)")
+        }
+        
+    }
+    
+    private func getCartFromPersistence() {
+        do {
+            let savedCart = try CartPersistenceManager.manager.getCart()
+            self.cart = savedCart
+            print(self.cart)
+        } catch {
+            print("Error getting cart: \(error)")
+        }
+    }
+    
+    private func setStepperValue() {
+        if let currentRecipe = recipe {
+        
+            let existsInCart = currentRecipe.existsInCart()
+            switch existsInCart {
+            case false:
+                cartStepper.value = 0
+            case true:
+                for index in 0..<cart.count {
+                    if cart[index].id == currentRecipe.id {
+                        cartStepper.value = cart[index].numberInCart ?? 0
+                    }
+                }
+                
+            default:
+                cartStepper.value = 0
+            }
+        }
+        
     }
     
     private func setImage() {

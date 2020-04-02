@@ -58,6 +58,19 @@ class AzureBrowseScreenViewController: UIViewController {
         addSubviews()
         constrainSubviews()
         setDelegates()
+        setNavBar()
+    }
+    
+    @objc private func cartButtonPressed() {
+        let cartVC = AzureCartViewController()
+        UIView.transition(from: self.view, to: cartVC.view, duration: 0.8, options: .transitionCrossDissolve) { [weak self](_) in
+           
+            self?.navigationController?.pushViewController(cartVC, animated: true)
+            DispatchQueue.main.async {
+                self?.activityIndicator.stopAnimating()
+            }
+            
+        }
         
     }
     
@@ -82,6 +95,17 @@ class AzureBrowseScreenViewController: UIViewController {
         collectionView.emptyDataSetDelegate = self
         collectionView.emptyDataSetSource = self
         collectionView.backgroundView = UIView()
+    }
+    
+    private func setNavBar() {
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.view.backgroundColor = .white
+        self.navigationController?.navigationBar.isHidden = false
+        
+        let rightButton = UIBarButtonItem(image: UIImage(systemName: "cart"), style: .plain, target: self, action: #selector(cartButtonPressed))
+        
+        self.navigationItem.rightBarButtonItem = rightButton
+        
     }
     
     private func addSubviews() {

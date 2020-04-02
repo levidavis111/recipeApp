@@ -24,6 +24,9 @@
 		FC44C49C2434FD490096FEC7 /* ReuseIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C49B2434FD490096FEC7 /* ReuseIdentifiers.swift */; };
 		FC44C4A02435352B0096FEC7 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C49F2435352B0096FEC7 /* ImageManager.swift */; };
 		FC44C4A2243538920096FEC7 /* AzureDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4A1243538920096FEC7 /* AzureDetailViewController.swift */; };
+		FC44C4A6243548130096FEC7 /* CartPersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4A4243548130096FEC7 /* CartPersistenceManager.swift */; };
+		FC44C4A7243548130096FEC7 /* PersistenceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4A5243548130096FEC7 /* PersistenceHelper.swift */; };
+		FC44C4A9243552D00096FEC7 /* AzureCartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC44C4A8243552D00096FEC7 /* AzureCartViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +65,9 @@
 		FC44C49B2434FD490096FEC7 /* ReuseIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseIdentifiers.swift; sourceTree = "<group>"; };
 		FC44C49F2435352B0096FEC7 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		FC44C4A1243538920096FEC7 /* AzureDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzureDetailViewController.swift; sourceTree = "<group>"; };
+		FC44C4A4243548130096FEC7 /* CartPersistenceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartPersistenceManager.swift; sourceTree = "<group>"; };
+		FC44C4A5243548130096FEC7 /* PersistenceHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceHelper.swift; sourceTree = "<group>"; };
+		FC44C4A8243552D00096FEC7 /* AzureCartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzureCartViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +136,7 @@
 				FC44C4942434F2DB0096FEC7 /* View Controllers */,
 				FC44C48A2434E1D10096FEC7 /* Models */,
 				FC44C48D2434E61E0096FEC7 /* Networking */,
+				FC44C4A3243547EC0096FEC7 /* Persistence */,
 				FC44C49A2434FD260096FEC7 /* Utilities */,
 				FC44C4872434E0D50096FEC7 /* Secrets */,
 				FC44C4862434DF210096FEC7 /* Supporting Files */,
@@ -191,6 +198,7 @@
 				FC44C4972434FCA80096FEC7 /* Cells */,
 				FC44C4952434F2F00096FEC7 /* AzureBrowseScreenViewController.swift */,
 				FC44C4A1243538920096FEC7 /* AzureDetailViewController.swift */,
+				FC44C4A8243552D00096FEC7 /* AzureCartViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -209,6 +217,15 @@
 				FC44C49B2434FD490096FEC7 /* ReuseIdentifiers.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		FC44C4A3243547EC0096FEC7 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				FC44C4A4243548130096FEC7 /* CartPersistenceManager.swift */,
+				FC44C4A5243548130096FEC7 /* PersistenceHelper.swift */,
+			);
+			path = Persistence;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -380,6 +397,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC44C4962434F2F00096FEC7 /* AzureBrowseScreenViewController.swift in Sources */,
+				FC44C4A7243548130096FEC7 /* PersistenceHelper.swift in Sources */,
 				FC44C4A02435352B0096FEC7 /* ImageManager.swift in Sources */,
 				FC44C4992434FCD20096FEC7 /* AzureBrowseCollectionViewCell.swift in Sources */,
 				FC44C4892434E0E40096FEC7 /* Secret.swift in Sources */,
@@ -390,6 +408,8 @@
 				FC44C48C2434E3D70096FEC7 /* Recipe.swift in Sources */,
 				FC44C4912434E8330096FEC7 /* AppError.swift in Sources */,
 				FC44C49C2434FD490096FEC7 /* ReuseIdentifiers.swift in Sources */,
+				FC44C4A9243552D00096FEC7 /* AzureCartViewController.swift in Sources */,
+				FC44C4A6243548130096FEC7 /* CartPersistenceManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

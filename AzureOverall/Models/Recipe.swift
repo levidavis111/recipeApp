@@ -19,7 +19,22 @@ struct Recipe: Codable {
     let readyInMinutes: Int
     let servings: Int
     let title: String
-    let numberInCart = 0
+    var numberInCart: Double? = 0
+    
+    func existsInCart() -> Bool? {
+        do {
+            let recipes = try CartPersistenceManager.manager.getCart()
+            
+            if recipes.contains(where: {$0.id == self.id}) {
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            print(error)
+            return nil
+        }
+    }
 }
 //https://api.spoonacular.com/recipes/search?query=cheese&number=2&apiKey=
 
